@@ -1,0 +1,5 @@
+sinatra
+json
+oauth --version '>= 0.3.5'
+bitly
+siuying-twitter --source gems.github.com
