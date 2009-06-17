@@ -1,5 +1,6 @@
 require 'sinatra/base'
 require 'oauth'
+require 'logger'
 
 module Sinatra
   module OauthAuth
@@ -39,22 +40,22 @@ module Sinatra
     end
 
     def self.registered(app)
-      helpers OauthAuth::Helpers
+      app.helpers OauthAuth::Helpers
       
-      before do
+      app.before do
         init_oauth
       end
       
-      get '/connect' do
+      app.get '/connect' do
         authorize!
       end
 
-      get '/logout' do
+      app.get '/logout' do
         logout!
         redirect '/'
       end
       
-      get '/auth' do
+      app.get '/auth' do
           # Exchange the request token for an access token.
           @request_token = OAuth::RequestToken.new(@oauth,
             session[:request_token], 
