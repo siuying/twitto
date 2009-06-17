@@ -4,4 +4,5 @@ oauth --version '>= 0.3.5'
 philnash-bitly --source gems.github.com
 mash --version '= 0.0.3'
 httparty --version '= 0.4.3'
+fakeweb
 siuying-twitter --source gems.github.com
