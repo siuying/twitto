@@ -1,5 +1,5 @@
 sinatra
 json
 oauth --version '>= 0.3.5'
-bitly
+philnash-bitly --source gems.github.com
 siuying-twitter --source gems.github.com
