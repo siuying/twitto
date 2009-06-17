@@ -56,29 +56,26 @@ module Sinatra
         redirect '/'
       end
       
+      # handle authentication
+      # throw OAuth::Unauthorized
       app.get '/auth' do
-          # Exchange the request token for an access token.
-          @request_token = OAuth::RequestToken.new(@oauth,
-            session[:request_token], 
-            session[:request_token_secret])
+        # Exchange the request token for an access token.
+        @request_token = OAuth::RequestToken.new(@oauth,
+          session[:request_token], 
+          session[:request_token_secret])
 
-          begin
-            @access_token = @request_token.get_access_token(:oauth_verifier => params[:oauth_verifier])
-            session[:access_token] = @access_token.token
-            session[:secret_token] = @access_token.secret
-            session[:authorized] = true
-            if session[:redirect_to]
-              url = session[:redirect_to]
-              session[:redirect_to] = nil              
-              redirect url
-            else
-              redirect '/'
-            end
-          rescue OAuth::Unauthorized => e
-            # log error here
-            redirect '/'
-          end
+        @access_token = @request_token.get_access_token(:oauth_verifier => params[:oauth_verifier])
+        session[:access_token] = @access_token.token
+        session[:secret_token] = @access_token.secret
+        session[:authorized] = true
+        if session[:redirect_to]
+          url = session[:redirect_to]
+          session[:redirect_to] = nil              
+          redirect url
+        else
+          redirect '/'
         end
+      end
     end
   end
 

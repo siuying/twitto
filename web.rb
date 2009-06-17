@@ -42,7 +42,7 @@ post '/go' do
 end
 
 error OAuth::Unauthorized do
-  "Not Authorized"
+  erb :rejected
 end
 
 error do
