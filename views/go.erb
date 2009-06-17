@@ -1,0 +1,8 @@
+<form action="/go" method="post" id="go">
+	<p>Title: <%= h(@title) %></p>
+	<p>URL: <%= h(@url) %></p>
+
+	<input type="hidden" name="url" value="<%= h(@short_url) %>" />
+	<input type="text" name="message" value="<%= h( "\"#{@title}\"" ) %>" id="message" size="30" />
+	<input type="submit" name="" value="twit!" id="submit" />
+</form>

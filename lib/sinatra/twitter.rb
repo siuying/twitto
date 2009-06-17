@@ -6,7 +6,7 @@ module Sinatra
   module TwitterClient
     module Helpers
       @@config = YAML.load_file("config.yml") rescue nil || {}
-      def twitter!
+      def twitter
         raise "Require OauthAuth!" unless session
         return @twitter if @twitter
 
