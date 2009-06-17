@@ -21,7 +21,7 @@ end
 
 # Allow user to input tweet
 get '/go' do
-  authorize!
+  authorize!("/go?title=#{u params[:title]}&url=#{u params[:url]}")
   @title      = params[:title] || ""
   @url        = params[:url]   || ""
   @short_url  = bitly.shorten(@url).short_url rescue @url
@@ -44,5 +44,8 @@ end
 helpers do
   def h(text)
     Rack::Utils.escape_html(text) 
+  end
+  def u(text)
+    Rack::Utils.escape(text) 
   end
 end
