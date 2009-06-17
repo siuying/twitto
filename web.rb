@@ -1,7 +1,9 @@
 #!/usr/bin/env ruby
 require 'rubygems'
 require 'sinatra'
+
 require 'lib/sinatra/oauth_auth'
+require 'lib/sinatra/twitter'
 
 configure do
   set :sessions, true
@@ -14,7 +16,8 @@ end
 
 get '/new' do
   authorize!
-  erb :new
+  twitter!
+  "twitter timeline: #{@twitter.user_timeline.collect(){|m| m.text}}"
 end
 
 helpers do
