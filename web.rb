@@ -41,6 +41,14 @@ post '/go' do
   erb :close
 end
 
+error OAuth::Unauthorized do
+  "Not Authorized"
+end
+
+error do
+  "Opps! Something happened. Please report to me @siuying"
+end
+
 helpers do
   def h(text)
     Rack::Utils.escape_html(text) 
