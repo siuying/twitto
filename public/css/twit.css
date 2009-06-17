@@ -1,0 +1,48 @@
+body {
+font-family: Georgia, Times, serif;
+line-height: 1.0;
+color:#000;
+background-color: #9ae4e8;
+color:#564b47;
+padding:20px;
+margin:0px;
+text-align: left;
+font-size: 1.2em;
+}
+
+h1 {
+font-size: 3em;
+padding: 0 220px 0 0;
+margin: 5px;
+}
+
+#container {
+text-align: center;
+vertical-align: middle;
+margin: 0px auto;
+padding: 0px;
+width: 90%;
+}
+
+#content {
+text-align: left;
+vertical-align: middle;
+margin: 0px auto;
+padding: 20px;
+width: 420px;
+background-color: #ffffff;
+border: 1px dashed #564b47;
+}
+
+.label {
+font-weight: bold;
+}
+
+p.main {
+font-size: 1.4em;
+}
+
+p.footer {
+padding: 0 0 0 240px;
+margin: 5px;
+}

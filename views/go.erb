@@ -1,8 +1,8 @@
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3/jquery.min.js"></script>
 <script type="text/javascript" src="/js/twitto.js"></script>
 <form action="/go" method="post" id="go">
-	<p>Title: <%= h(@title) %></p>
-	<p>URL: <%= h(@url) %></p>
+	<p><span class="label">Title:</span> <%= h(@title) %></p>
+	<p><span class="label">URL</span> <%= h(@url) %></p>
 	<select id='action' name='action'>
 	</select>
 	<input type="hidden" name="url" value="<%= h(@short_url) %>" />
@@ -10,6 +10,6 @@
 	<input type="submit" name="" value="twit!" id="submit" />
 </form>
 <script type="text/javascript">
-var emote = <%= @emote %>;
-TwitTo.buildAction(emote);
+var actions = <%= @actions %>;
+TwitTo.buildActions(actions);
 </script>

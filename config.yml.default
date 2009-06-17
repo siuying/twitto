@@ -4,3 +4,11 @@ consumer_key: your.key
 consumer_secret: your.secret
 bitly_user: your.bitly.user
 bitly_key: your.bitly.key
+actions:
+  - "Reading"
+  - "Watching"
+  - "Laughing"
+  - "Posted"
+  - "Orz at"
+  - "Re"
+  - "@"
