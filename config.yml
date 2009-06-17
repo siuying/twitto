@@ -1,0 +1,10 @@
+site: "http://twitter.com"
+callback: "http://twitto.heroku.com/auth"
+actions:
+  - "Reading"
+  - "Watching"
+  - "Laughing"
+  - "Posted"
+  - "Orz at"
+  - "Re"
+  - "@"

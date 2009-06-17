@@ -8,8 +8,8 @@ module Sinatra
 
       def init_oauth
         @oauth = OAuth::Consumer.new(
-          @@config['consumer_key'],
-          @@config['consumer_secret'],
+          ENV['OAUTH_KEY'],
+          ENV['OAUTH_SECRET'],
           {:site => @@config['site']}
         )
         @oauth_callback = @@config['callback']

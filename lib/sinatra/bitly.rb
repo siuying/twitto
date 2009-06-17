@@ -5,10 +5,8 @@ require 'sinatra/base'
 module Sinatra
   module BitlyClient
     module Helpers
-      @@config = YAML.load_file("config.yml") rescue nil || {}
-
       def bitly
-        @bitly ||= Bitly.new(@@config['bitly_user'],  @@config['bitly_key'])
+        @bitly ||= Bitly.new(ENV['BITLY_USER'],  ENV['BITLY_KEY'])
       end
     end
     def self.registered(app)
