@@ -26,13 +26,12 @@ module Sinatra
           request_token = @oauth.get_request_token(:oauth_callback => @oauth_callback)
           session[:request_token] = request_token.token
           session[:request_token_secret] = request_token.secret
-          session[:access_token] = nil
-          session[:secret_token] = nil
           redirect request_token.authorize_url
         end
       end
 
       def logout!
+        session[:authorized] = false
         session[:user] = nil
         session[:request_token] = nil
         session[:request_token_secret] = nil
