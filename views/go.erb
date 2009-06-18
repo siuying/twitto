@@ -5,11 +5,17 @@
 	<p><span class="label">URL</span> <%= h(@url) %></p>
 	<select id='action' name='action'>
 	</select>
-	<input type="hidden" name="url" value="<%= h(@short_url) %>" />
+	<input type="hidden" name="url" value="<%= h(@short_url) %>" id="url"/>
 	<input type="text" name="message" value="<%= h( "\"#{@title}\"" ) %>" id="message" size="30" />
 	<input type="submit" name="" value="twit!" id="submit" />
+	<span class="remain">Remaining: <b id="remainCount">140</b></span>
 </form>
+
 <script type="text/javascript">
 var actions = <%= @actions %>;
 TwitTo.buildActions(actions);
+$("#action").bind("change", 	TwitTo.onMessageUpdated);
+$(document).bind("keyup", 		TwitTo.onMessageUpdated);
+$("#message").bind("change", 	TwitTo.onMessageUpdated);
+TwitTo.init();
 </script>

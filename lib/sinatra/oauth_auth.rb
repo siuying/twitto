@@ -8,6 +8,9 @@ module Sinatra
       @@config = YAML.load_file("config.yml") rescue nil || {}
 
       def init_oauth
+        @log = Logger.new(STDOUT)
+        @log.info "#{ENV['OAUTH_KEY']}, #{ENV['OAUTH_SECRET']}"
+        
         @oauth = OAuth::Consumer.new(
           ENV['OAUTH_KEY'],
           ENV['OAUTH_SECRET'],
