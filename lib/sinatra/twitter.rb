@@ -15,7 +15,7 @@ module Sinatra
       end
     end
     def self.registered(app)
-      helpers TwitterClient::Helpers
+      app.helpers TwitterClient::Helpers
     end
   end
 

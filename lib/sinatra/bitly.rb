@@ -10,7 +10,7 @@ module Sinatra
       end
     end
     def self.registered(app)
-      helpers BitlyClient::Helpers
+      app.helpers BitlyClient::Helpers
     end
   end
 
