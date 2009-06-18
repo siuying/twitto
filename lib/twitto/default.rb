@@ -26,11 +26,12 @@ module Sinatra
         # Accept user input and post them to Twitter
         app.post '/go' do
           authorize!
-          @url     = params[:url]     || ""
-          @message = params[:message] || ""
-          @action  = params[:action]  || ""
-        
-          tweet = "#{@action} #{@message} (#{@url})"
+          url     = params[:url]     || ""
+          message = params[:message] || ""
+          action  = params[:action]  || ""        
+          remaining = 140 - url.length + action.length + 3
+          tweet = "#{action}#{message[0,remaining]} (#{url})"
+
           twitter.update(tweet)
           erb :close
         end
