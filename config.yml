@@ -1,5 +1,5 @@
 site: "http://twitter.com"
-callback: "http://dev.twitto.reality.hk/auth"
+callback: "http://twitto.heroku.hk/auth"
 actions:
   - "Reading"
   - "Watching"
