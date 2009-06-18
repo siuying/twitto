@@ -8,15 +8,16 @@ module Sinatra
       @@config = YAML.load_file("config.yml") rescue nil || {}
 
       def init_oauth
-        @log = Logger.new(STDOUT)
-        @log.info "#{ENV['OAUTH_KEY']}, #{ENV['OAUTH_SECRET']}"
-        
+        @log              = $LOGGER || Logger.new(STDOUT)
+        @oauth_key        = ENV['OAUTH_KEY']
+        @oauth_secret     = ENV['OAUTH_SECRET']
+        @oauth_callback   = "#{ENV['SERVER_HOST']}/auth"
+                
         @oauth = OAuth::Consumer.new(
-          ENV['OAUTH_KEY'],
-          ENV['OAUTH_SECRET'],
+          @oauth_key,
+          @oauth_secret,
           {:site => @@config['site']}
         )
-        @oauth_callback = "#{ENV['SERVER_HOST']}/auth"
       end
       
       def authorized?
@@ -25,6 +26,7 @@ module Sinatra
 
       def authorize!(target=nil)
         unless authorized?
+          @log.info "user not authorized, redirect user [#{target}]"
           session[:redirect_to] = target
           request_token = @oauth.get_request_token(:oauth_callback => @oauth_callback)
           session[:request_token] = request_token.token
@@ -34,12 +36,14 @@ module Sinatra
       end
 
       def logout!
-        session[:authorized] = false
-        session[:user] = nil
+        @log.debug "logout user #{session[:user]}"
+        session[:authorized]    = false
+        session[:user_id]       = nil
+        session[:screen_name]   = nil
         session[:request_token] = nil
         session[:request_token_secret] = nil
-        session[:access_token] = nil
-        session[:secret_token] = nil
+        session[:access_token]  = nil
+        session[:secret_token]  = nil
       end
     end
 
@@ -68,9 +72,12 @@ module Sinatra
           session[:request_token_secret])
 
         @access_token = @request_token.get_access_token(:oauth_verifier => params[:oauth_verifier])
-        session[:access_token] = @access_token.token
-        session[:secret_token] = @access_token.secret
-        session[:authorized] = true
+        session[:access_token]  = @access_token.token
+        session[:secret_token]  = @access_token.secret
+        session[:user_id]       = @access_token.params["user_id"]     rescue ""
+        session[:screen_name]   = @access_token.params["screen_name"] rescue ""
+        session[:authorized]    = true
+
         if session[:redirect_to]
           url = session[:redirect_to]
           session[:redirect_to] = nil              
