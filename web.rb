@@ -14,5 +14,9 @@ class TwitTo < Sinatra::Default
   register Sinatra::TwitterClient
   register Sinatra::Twitto::Default
   
+  set :views,  'views'
+  set :public, 'public'
+  set :environment, :production
+
   enable :sessions
 end
