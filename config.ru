@@ -1,3 +1,3 @@
 require 'web'
 
-run TwitTo::Application
+run TwitTo
