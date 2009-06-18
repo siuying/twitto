@@ -16,7 +16,7 @@ module Sinatra
           ENV['OAUTH_SECRET'],
           {:site => @@config['site']}
         )
-        @oauth_callback = @@config['callback']
+        @oauth_callback = "#{ENV['SERVER_HOST']}/auth"
       end
       
       def authorized?
