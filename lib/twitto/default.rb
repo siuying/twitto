@@ -28,14 +28,13 @@ module Sinatra
           authorize!
           url     = params[:url]     || ""
           message = params[:message] || ""
-          action  = params[:action]  || ""        
-          remaining = 140 - url.length + action.length + 3
-          tweet = "#{action}#{message[0,remaining]} (#{url})"
+          action  = params[:action]  || ""
 
+          tweet = compose_tweet(action, message, url)
           twitter.update(tweet)
           erb :close
         end
-        
+
         app.error OAuth::Unauthorized do
           erb :rejected
         end
@@ -46,6 +45,10 @@ module Sinatra
       end
       
       module Helpers
+        def compose_tweet(action, message, url)
+          remaining = 140 - url.length - action.length - 3
+          "#{action}#{message[0,remaining]} (#{url})"
+        end
         def h(text)
           Rack::Utils.escape_html(text) 
         end
