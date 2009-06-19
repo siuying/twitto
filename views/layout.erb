@@ -13,6 +13,18 @@
   <%= yield %>
   </div>
   <p class="footer">follow me @<a href="http://twitter.com/siuying">siuying</a></p>
+  <p class="footer bottom">powered by <a href="http://www.sinatrarb.com/">Sinatra</a>, clone me at <a href="http://github.com/siuying/twitto/tree/master">github</a>!</p>
 </div>
+<!-- Start GA -->
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("<%= ENV['GA_ID'] %>");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+<!-- End GA -->
 </body>
 </html>
