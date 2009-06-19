@@ -26,7 +26,7 @@ module Sinatra
 
       def authorize!(target=nil)
         unless authorized?
-          @log.info "user not authorized, redirect user [#{target}]"
+          @log.debug "user not authorized, redirect user [#{target}]"
           session[:redirect_to] = target
           request_token = @oauth.get_request_token(:oauth_callback => @oauth_callback)
           session[:request_token] = request_token.token
@@ -77,7 +77,8 @@ module Sinatra
         session[:user_id]       = @access_token.params["user_id"]     rescue ""
         session[:screen_name]   = @access_token.params["screen_name"] rescue ""
         session[:authorized]    = true
-
+        @log.info "authorized, user [#{session[:user_id]}]"
+        
         if session[:redirect_to]
           url = session[:redirect_to]
           session[:redirect_to] = nil              
