@@ -15,23 +15,27 @@ module Sinatra
         
         # Allow user to input tweet
         app.get '/go' do
-          authorize!("/go?title=#{u params[:title]}&url=#{u params[:url]}")
+          authorize! "/go?title=#{u params[:title]}&url=#{u params[:url]}"
+
           @title      = params[:title] || ""
           @url        = params[:url]   || ""
           @short_url  = bitly.shorten(@url).short_url rescue @url
           @actions    = JSON(@@config['actions']) 
+
           erb :go
         end
         
         # Accept user input and post them to Twitter
         app.post '/go' do
           authorize!
+
           url     = params[:url]     || ""
           message = params[:message] || ""
           action  = params[:action]  || ""
 
           tweet = compose_tweet(action, message, url)
           twitter.update(tweet)
+
           erb :close
         end
 
