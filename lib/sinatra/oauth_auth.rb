@@ -5,33 +5,26 @@ require 'logger'
 module Sinatra
   module OauthAuth
     module Helpers
-      @@config = YAML.load_file("config.yml") rescue nil || {}
 
-      def init_oauth
-        @log              = $LOGGER || Logger.new(STDOUT)
-        @oauth_key        = ENV['OAUTH_KEY']
-        @oauth_secret     = ENV['OAUTH_SECRET']
-        @oauth_callback   = "#{ENV['SERVER_HOST']}/auth"
-                
-        @oauth = OAuth::Consumer.new(
-          @oauth_key,
-          @oauth_secret,
-          {:site => @@config['site']}
-        )
-      end
-      
       def authorized?
         session[:authorized]
       end
 
       def authorize!(target=nil)
         unless authorized?
-          @log.debug "user not authorized, redirect user [#{target}]"
-          session[:redirect_to] = target
-          request_token = @oauth.get_request_token(:oauth_callback => @oauth_callback)
-          session[:request_token] = request_token.token
-          session[:request_token_secret] = request_token.secret
-          redirect request_token.authorize_url
+          begin
+            @log.debug "user not authorized, redirect user [#{target}]"
+            session[:redirect_to] = target
+            request_token = @oauth.get_request_token(:oauth_callback => options.oauth_callback)
+            session[:request_token] = request_token.token
+            session[:request_token_secret] = request_token.secret
+            redirect request_token.authorize_url
+
+          rescue OAuth::Unauthorized => e
+            @log.error "Failed to attain oauth request token. OAuth not authorize with our auth key? [oath_key=#{options.oauth_key}, error=#{e.inspect}]"
+            raise "Error acquiring OAuth token, cannot authenticate ourself with oauth server!"
+          end
+
         end
       end
 
@@ -49,12 +42,21 @@ module Sinatra
 
     def self.registered(app)
       app.helpers OauthAuth::Helpers
-      
+      app.set :oauth_site,      "http://twitter.com"
+      app.set :oauth_key,       "yourkey"
+      app.set :oauth_secret,    "yoursecret"
+      app.set :oauth_callback,  "yourcallback"
+
       app.before do
-        init_oauth
+        @log              = $LOGGER || Logger.new(STDOUT)              
+        @oauth = OAuth::Consumer.new(
+          options.oauth_key,
+          options.oauth_secret,
+          {:site => options.oauth_site}
+        )
       end
       
-      app.get '/connect' do
+      app.get '/login' do
         authorize!
       end
 
@@ -64,7 +66,7 @@ module Sinatra
       end
       
       # handle authentication
-      # throw OAuth::Unauthorized
+      # raise OAuth::Unauthorized
       app.get '/auth' do
         # Exchange the request token for an access token.
         @request_token = OAuth::RequestToken.new(@oauth,
