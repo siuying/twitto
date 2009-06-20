@@ -43,9 +43,11 @@ module Sinatra
     def self.registered(app)
       app.helpers OauthAuth::Helpers
       app.set :oauth_site,      "http://twitter.com"
-      app.set :oauth_key,       "yourkey"
-      app.set :oauth_secret,    "yoursecret"
-      app.set :oauth_callback,  "yourcallback"
+
+      # Override these key, or supply ENV variables
+      app.set :oauth_key,       ENV['OAUTH_KEY']
+      app.set :oauth_secret,    ENV['OAUTH_SECRET']
+      app.set :oauth_callback,  "#{ENV['SERVER_HOST']}/auth"
 
       app.before do
         @log              = $LOGGER || Logger.new(STDOUT)              
