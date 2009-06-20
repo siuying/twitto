@@ -2,6 +2,7 @@ require 'sinatra/base'
 require 'oauth'
 require 'logger'
 
+# OauthAuth Module
 module Sinatra
   module OauthAuth
     module Helpers
@@ -44,7 +45,7 @@ module Sinatra
       app.helpers OauthAuth::Helpers
       app.set :oauth_site,      "http://twitter.com"
 
-      # Override these key, or supply ENV variables
+      # Override these, or supply ENV variables
       app.set :oauth_key,       ENV['OAUTH_KEY']
       app.set :oauth_secret,    ENV['OAUTH_SECRET']
       app.set :oauth_callback,  "#{ENV['SERVER_HOST']}/auth"
