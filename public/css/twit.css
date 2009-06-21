@@ -28,8 +28,8 @@ width: 90%;
 text-align: left;
 vertical-align: middle;
 margin: 0px auto;
-padding: 20px;
-width: 420px;
+padding: 25px;
+width: 500px;
 background-color: #ffffff;
 border: 1px dashed #564b47;
 }
@@ -54,3 +54,27 @@ font-size: 0.7em;
 p.bottom {
 font-size: 0.6em;
 }
+
+div.nav {
+float: right;
+font-size: 0.8em;
+}
+
+/* Customize Page */
+ul.actions {
+margin: 0;
+padding: 0;
+}
+
+ul.actions li {
+list-style-type: none;
+padding: 2px 10px;
+}
+
+img{
+border: 0;
+}
+img:link {
+text-decoration: none;
+}
+

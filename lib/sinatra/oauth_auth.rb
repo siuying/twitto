@@ -29,8 +29,32 @@ module Sinatra
         end
       end
 
+      # Exchange the request token for an access token.
+      def authorize_callback
+        @request_token = OAuth::RequestToken.new(@oauth,
+          session[:request_token], 
+          session[:request_token_secret])
+
+        @access_token = @request_token.get_access_token(:oauth_verifier => params[:oauth_verifier])
+        session[:access_token]  = @access_token.token
+        session[:secret_token]  = @access_token.secret
+        session[:user_id]       = @access_token.params["user_id"]     rescue ""
+        session[:screen_name]   = @access_token.params["screen_name"] rescue ""
+        session[:authorized]    = true
+        @log.info "authorized, user [#{session[:screen_name]}]"
+        
+        if session[:redirect_to]
+          url = session[:redirect_to]
+          session[:redirect_to] = nil              
+          redirect url
+        else
+          redirect '/'
+        end
+
+      end
+      
       def logout!
-        @log.debug "logout user #{session[:user]}"
+        @log.debug "logout user [#{session[:screen_name]}]"
         session[:authorized]    = false
         session[:user_id]       = nil
         session[:screen_name]   = nil
@@ -71,26 +95,7 @@ module Sinatra
       # handle authentication
       # raise OAuth::Unauthorized
       app.get '/auth' do
-        # Exchange the request token for an access token.
-        @request_token = OAuth::RequestToken.new(@oauth,
-          session[:request_token], 
-          session[:request_token_secret])
-
-        @access_token = @request_token.get_access_token(:oauth_verifier => params[:oauth_verifier])
-        session[:access_token]  = @access_token.token
-        session[:secret_token]  = @access_token.secret
-        session[:user_id]       = @access_token.params["user_id"]     rescue ""
-        session[:screen_name]   = @access_token.params["screen_name"] rescue ""
-        session[:authorized]    = true
-        @log.info "authorized, user [#{session[:user_id]}]"
-        
-        if session[:redirect_to]
-          url = session[:redirect_to]
-          session[:redirect_to] = nil              
-          redirect url
-        else
-          redirect '/'
-        end
+        authorize_callback
       end
     end
   end

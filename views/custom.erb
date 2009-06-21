@@ -1,0 +1,85 @@
+<div>
+	<p>Custom Actions</p>
+	<ul class="actions">
+		<% for action in @user.actions %>
+		<li id="action_list_<%= action.id %>">
+			<% if action.fav? %>
+			<img class="star" src="/images/star.png" id="fav"/>
+			<% else %>
+			<img class="empty" src="/images/star_empty.png" />
+			<% end %>			
+			<img class="delete" src="/images/delete.png" />
+			<%= action.name %>
+		</li>
+		<% end %>
+	</ul>
+</div>
+
+<div>
+	<form action="/custom" method="post" id="custom_form">
+	<p><img src="/images/add.png" />
+		Add Action
+		<input type="text" name="name" value="" id="form_text"/>
+		<input type="submit" name="" value="Add" id="submit" />
+	</p>
+	<p><a id="reset" href="#"><img src="/images/arrow_refresh.png" />Reset to Default</a></p>
+	</form>
+</div>
+
+<div class="nav"><a href="#" id="back">back</a></div>
+
+<script type="text/javascript">
+
+find_item_id = function(target) {
+  ele_id = $(target).parent().attr("id");
+  return ele_id.substring(ele_id.lastIndexOf('_')+1);
+}
+
+after_fave = function(fav_id) {
+	var old_fav_item = $(".star");
+	old_fav_item.parent().prepend("<img  class=\"empty\" src=\"/images/star_empty.png\" />");
+	old_fav_item.remove();
+
+	var fav_item = $("#action_list_" + fav_id).children(".empty");
+	fav_item.parent().prepend("<img class=\"star\" src=\"/images/star.png\" id=\"fav\" />");
+	fav_item.remove();	
+}
+
+/* Set Fave */
+$(".empty").live("click", function(e){
+	var item_id = find_item_id(e.target);
+	$.post("/fave", { aid: item_id }, function(data){
+		after_fave(item_id);
+	});
+	return false;
+});
+
+/* Delete Item */
+$(".delete").live("click", function(e){
+	var item_id = find_item_id(e.target);
+	console.log("delete item:", item_id);
+	return false;
+});
+
+/* New Action */
+$("#custom_form").bind("submit", function(e){
+	var new_action = $("#form_text").val();
+	console.log("new item:", new_action);
+	$("#form_text").val("");
+	return false;
+});
+
+/* Reset Form */
+$("#reset").bind("click", function(e){
+	$.post("/reset", {}, function(data){
+		window.location = '<%= @back_url %>';
+	});
+	return false;
+});
+
+$("#back").bind("click", function(e){
+	history.go(-1);
+	return false;
+});
+
+</script>

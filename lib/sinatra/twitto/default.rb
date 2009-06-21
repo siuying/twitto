@@ -15,6 +15,7 @@ module Sinatra
 
         app.before do
           @log ||= $LOGGER || Logger.new(STDOUT)              
+          @default_options = @@config['actions']
         end
         
         app.get '/' do
@@ -24,11 +25,13 @@ module Sinatra
         # Allow user to input tweet
         app.get '/go' do
           authorize! "/go?title=#{u params[:title]}&url=#{u params[:url]}"
-
+          
+          @user       = find_or_create_user(session[:screen_name])
           @title      = params[:title] || ""
           @url        = params[:url]   || ""
           @short_url  = bitly.shorten(@url).short_url rescue @url
-          @actions    = @@config['actions'].to_json
+          @actions    = @user.actions.collect(&:name).to_json
+          @fav_action = Action.first(:fav => true, :user_id => @user.id).name.to_json
 
           erb :go
         end
@@ -57,7 +60,7 @@ module Sinatra
         end
       end
       
-      module Helpers
+      module Helpers        
         def compose_tweet(action, message, url)
           remaining = 140 - url.length - action.length - 3
           "#{action}#{message.mb_chars.slice(0..(remaining-1))} (#{url})"

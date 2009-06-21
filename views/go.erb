@@ -1,4 +1,3 @@
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3/jquery.min.js"></script>
 <script type="text/javascript" src="/js/twitto.js"></script>
 <form action="/go" method="post" id="go">
 	<p><span class="label">Title:</span> <%= h(@title) %></p>
@@ -13,9 +12,14 @@
 
 <script type="text/javascript">
 var actions = <%= @actions %>;
-TwitTo.buildActions(actions);
+var fav_action = <%= @fav_action %>;
+TwitTo.buildActions(actions, fav_action);
+
 $("#action").bind("change", 	TwitTo.onMessageUpdated);
 $(document).bind("keyup", 		TwitTo.onMessageUpdated);
 $("#message").bind("change", 	TwitTo.onMessageUpdated);
+
 TwitTo.init();
 </script>
+
+<div class="nav"><a href="/customize">customize</a></div>

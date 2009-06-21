@@ -34,11 +34,15 @@ var TwitTo = {
     }
   },
 
-  buildActions: function() {
+  buildActions: function(actions, fav_action) {
     var actionHtml = [];
     for (var a in actions) {
         var action = actions[a];
-        actionHtml.push("<option value='" + action + "'>" + action + "</option>");
+        if (action == fav_action) {
+            actionHtml.push("<option selected value='" + action + "'>" + action + "</option>");
+        } else {
+            actionHtml.push("<option value='" + action + "'>" + action + "</option>");
+        }
     }
     $(actionHtml.join('')).appendTo("#action");
   }
