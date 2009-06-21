@@ -1,4 +1,8 @@
 require 'sinatra/base'
+$KCODE = 'UTF8'
+
+gem 'activesupport', '>= 2.2.0'
+require 'active_support'
 
 module Sinatra
   module Twitto
@@ -8,6 +12,10 @@ module Sinatra
 
       def self.registered(app)
         app.helpers Helpers
+
+        app.before do
+          @log ||= $LOGGER || Logger.new(STDOUT)              
+        end
         
         app.get '/' do
           erb :index
@@ -20,7 +28,7 @@ module Sinatra
           @title      = params[:title] || ""
           @url        = params[:url]   || ""
           @short_url  = bitly.shorten(@url).short_url rescue @url
-          @actions    = JSON(@@config['actions']) 
+          @actions    = @@config['actions'].to_json
 
           erb :go
         end
@@ -34,8 +42,9 @@ module Sinatra
           action  = params[:action]  || ""
 
           tweet = compose_tweet(action, message, url)
-          twitter.update(tweet)
 
+          @log.info "#{session[:screen_name]} Tweeted: #{tweet}"
+          twitter.update(tweet)          
           erb :close
         end
 
@@ -51,7 +60,7 @@ module Sinatra
       module Helpers
         def compose_tweet(action, message, url)
           remaining = 140 - url.length - action.length - 3
-          "#{action}#{message[0,remaining]} (#{url})"
+          "#{action}#{message.mb_chars.slice(0..(remaining-1))} (#{url})"
         end
         def h(text)
           Rack::Utils.escape_html(text) 

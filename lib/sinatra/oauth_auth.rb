@@ -51,7 +51,7 @@ module Sinatra
       app.set :oauth_callback,  "#{ENV['SERVER_HOST']}/auth"
 
       app.before do
-        @log              = $LOGGER || Logger.new(STDOUT)              
+        @log ||= $LOGGER || Logger.new(STDOUT)              
         @oauth = OAuth::Consumer.new(
           options.oauth_key,
           options.oauth_secret,
