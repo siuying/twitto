@@ -1,6 +1,0 @@
-export OAUTH_KEY=
-export OAUTH_SECRET=
-export BITLY_USER=
-export BITLY_KEY=
-export SERVER_HOST=http://twitto.heroku.com
-export GA_ID=
