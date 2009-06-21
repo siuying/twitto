@@ -31,6 +31,7 @@ module Sinatra
           @url        = params[:url]   || ""
           @short_url  = bitly.shorten(@url).short_url rescue @url
           @actions    = @user.actions.collect(&:name).to_json
+          # @user.actions.collect(){|a| [a.id, a.name, a.fav?]}.to_json
           @fav_action = Action.first(:fav => true, :user_id => @user.id).name.to_json
 
           erb :go
