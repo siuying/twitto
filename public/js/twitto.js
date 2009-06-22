@@ -37,8 +37,9 @@ var TwitTo = {
   buildActions: function(actions, fav_action) {
     var actionHtml = [];
     for (var a in actions) {
-        var action = actions[a];
-        if (action == fav_action) {
+        var action = actions[a][1];
+        var isFav  = actions[a][2]; 
+        if (isFav) {
             actionHtml.push("<option selected value='" + action + "'>" + action + "</option>");
         } else {
             actionHtml.push("<option value='" + action + "'>" + action + "</option>");
