@@ -6,7 +6,7 @@ require 'lib/sinatra/twitto'
 
 
 DataMapper.setup(:default, ENV['DATABASE_URL'] || "sqlite3://#{FileUtils.pwd}/twitto.db")
-DataMapper.auto_migrate!
+User.first rescue DataMapper.auto_migrate!
 
 class TwitTo < Sinatra::Default
   register Sinatra::BitlyClient
