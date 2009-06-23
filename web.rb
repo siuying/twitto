@@ -9,10 +9,10 @@ require 'data_objects'
 gem 'do_postgres', '>= 0.9.11'
 require 'do_postgres'
 require 'datamapper'
+require 'lib/sinatra/twitto'
 
 DataMapper.setup(:default, ENV['DATABASE_URL'] || "sqlite3://#{FileUtils.pwd}/twitto.db")
 DataMapper.auto_migrate!
-require 'lib/sinatra/twitto'
 
 class TwitTo < Sinatra::Default
   register Sinatra::BitlyClient
