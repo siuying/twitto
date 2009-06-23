@@ -13,7 +13,7 @@ end
 gem 'datamapper'
 require 'datamapper'
 
-require 'twitto/user'
 require 'twitto/action'
+require 'twitto/user'
 require 'twitto/default'
 require 'twitto/customize'
