@@ -120,7 +120,7 @@ module Sinatra
         
         def reset_user(user)
           raise "user cannot be nil" if user.nil?
-          user.actions.destroy!
+          user.actions.destroy! unless user.new_record?
           @default_options.each do |option|
             user.actions << Action.new(:name => option)              
           end
