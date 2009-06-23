@@ -18,7 +18,8 @@ class TwitTo < Sinatra::Default
   set :environment, :production
 
   DataMapper.setup(:default, ENV['DATABASE_URL'] || "sqlite3://#{FileUtils.pwd}/twitto.db")
-  Sinatra::Twitto::User.first rescue DataMapper.auto_migrate! # migrate if table not exists
+  DataMapper.auto_migrate!
+  Sinatra::Twitto::User.first
 
   enable :sessions
 end

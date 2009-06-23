@@ -1,3 +1,5 @@
+require 'user'
+
 class Sinatra::Twitto::Action
   include DataMapper::Resource
   property  :id,     Serial
