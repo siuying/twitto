@@ -1,8 +1,8 @@
-class Sinatra::Twitto::User
+class User
   include DataMapper::Resource
   property  :id,         Serial
   property  :name,       String, :length => 256
-  has n, :actions, :class_name => 'Sinatra::Twitto::Action'
+  has n, :actions
   
   def fav(action)
     actions.each do |a|
