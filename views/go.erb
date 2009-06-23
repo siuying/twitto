@@ -96,8 +96,6 @@ $("#custom_form").bind("submit", function(e){
 	var action_name = $("#form_text").val();
 	$.post("/action.add", { name: action_name }, function(data){
 		TwitTo.addAction(data['id'], action_name);
-		$("#actions").append(list_item_html);
-		$("#form_text").val("");
 	}, "json");
 	return false;
 });

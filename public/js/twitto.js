@@ -55,6 +55,10 @@ var TwitTo = {
 		list_item_html += "<img class=\"empty\" src=\"/images/star_empty.png\" /> ";
 		list_item_html += "<img class=\"delete\" src=\"/images/delete.png\" /> ";
 		list_item_html += action_name + "</li>";
+    
+		$("#actions").append(list_item_html);
+		$("#form_text").val("");
+		
 		TwitTo.actions.push([action_id, action_name, false]);
   },
   
