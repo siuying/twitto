@@ -3,6 +3,6 @@ class Sinatra::Twitto::Action
   property  :id,     Serial
   property  :name,   String,  :length => 50
   property  :fav,    Boolean, :default => false
-  belongs_to :user, :class_name => 'Sinatra::Twitto::User'
-
+  belongs_to :user
+  
 end
