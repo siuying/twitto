@@ -5,6 +5,11 @@ require 'oauth_auth'
 require 'twitter'
 require 'bitly'
 
+module Sinatra
+  module Twitto
+  end
+end
+
 gem 'datamapper', '>= 0.9.11'
 gem 'data_objects', '>= 0.9.11'
 require 'data_objects'
