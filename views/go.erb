@@ -1,25 +1,137 @@
 <script type="text/javascript" src="/js/twitto.js"></script>
-<form action="/go" method="post" id="go">
-	<p><span class="label">Title:</span> <%= h(@title) %></p>
-	<p><span class="label">URL</span> <%= h(@url) %></p>
-	<select id='action' name='action'>
-	</select>
-	<input type="hidden" name="url" value="<%= h(@short_url) %>" id="url"/>
-	<input type="text" name="message" value="<%= h( "\"#{@title}\"" ) %>" id="message" size="30" />
-	<input type="submit" name="" value="twit!" id="submit" />
-	<span class="remain">Remaining: <b id="remainCount">140</b></span>
-</form>
+
+<div id="publish">
+	<form action="/go" method="post" id="go">
+		<p><span class="label">Title:</span> <%= h(@title) %></p>
+		<p><span class="label">URL</span> <%= h(@url) %></p>
+		<select id='action' name='action'>
+		</select>
+		<input type="hidden" name="url" value="<%= h(@short_url) %>" id="url"/>
+		<input type="text" name="message" value="<%= h( "\"#{@title}\"" ) %>" id="message" size="30" />
+		<input type="submit" name="" value="twit!" id="submit" />
+		<span class="remain">Remaining: <b id="remainCount">140</b></span>
+	</form>
+	<div class="nav"><a href="#" id="customize-link">customize</a></div>
+</div>
+
+<div class="hidden" id="customize">
+	<p>Custom Actions</p>
+	<ul class="actions" id="actions">
+		<% for action in @user.actions %>
+		<li id="action_list_<%= action.id %>">
+			<% if action.fav? %>
+			<img class="star" src="/images/star.png" id="fav"/>
+			<% else %>
+			<img class="empty" src="/images/star_empty.png" />
+			<% end %>			
+			<img class="delete" src="/images/delete.png" />
+			<%= action.name %>
+		</li>
+		<% end %>
+	</ul>
+
+	<form action="/custom" method="post" id="custom_form">
+	<p><img src="/images/add.png" />
+		Add Action
+		<input type="text" name="name" value="" id="form_text"/>
+		<input type="submit" name="" value="Add" id="submit" />
+	</p>
+	<p><a id="reset" href="#"><img src="/images/arrow_refresh.png" />Reset to Default</a></p>
+	</form>
+
+	<div class="nav"><a href="#" id="done-custome-link">done</a></div>
+</div>
 
 <script type="text/javascript">
-var actions = <%= @actions %>;
-var fav_action = <%= @fav_action %>;
-TwitTo.buildActions(actions, fav_action);
+
+TwitTo.actions = <%= @actions %>;
+TwitTo.buildActions();
 
 $("#action").bind("change", 	TwitTo.onMessageUpdated);
 $(document).bind("keyup", 		TwitTo.onMessageUpdated);
 $("#message").bind("change", 	TwitTo.onMessageUpdated);
 
 TwitTo.init();
-</script>
 
-<div class="nav"><a href="/customize">customize</a></div>
+$("#customize-link").bind("click", function(e){
+	$("#publish").hide();
+	$("#customize").show();
+	return false;
+});
+
+$("#done-custome-link").bind("click", function(e){
+	TwitTo.buildActions();
+	$("#publish").show();
+	$("#customize").hide();
+	return false;
+});
+
+find_item_id = function(target) {
+  ele_id = $(target).parent().attr("id");
+  return ele_id.substring(ele_id.lastIndexOf('_')+1);
+}
+
+after_fave = function(fav_id) {
+	var old_fav_item = $(".star");
+	old_fav_item.parent().prepend("<img  class=\"empty\" src=\"/images/star_empty.png\" />");
+	old_fav_item.remove();
+
+	var fav_item = $("#action_list_" + fav_id).children(".empty");
+	fav_item.parent().prepend("<img class=\"star\" src=\"/images/star.png\" id=\"fav\" />");
+	fav_item.remove();
+	
+	TwitTo.fave(fav_id);
+}
+
+/* Set Fave */
+$(".empty").live("click", function(e){
+	var item_id = find_item_id(e.target);
+	$.post("/fave", { aid: item_id }, function(data){
+		after_fave(item_id);
+	});
+	return false;
+});
+
+/* Delete Item */
+$(".delete").live("click", function(e){
+	var action_id = find_item_id(e.target);
+	$.post("/action.del", { aid: action_id }, function(data){
+		$("#action_list_" + action_id).remove();
+		TwitTo.removeAction(action_id);
+	}, "json");
+	return false;
+});
+
+/* New Action */
+$("#custom_form").bind("submit", function(e){
+	var action_name = $("#form_text").val();
+	$.post("/action.add", { name: action_name }, function(data){
+		var action_id = data['id'];
+		if (action_id) {
+			var list_item_html = "<li id=\"action_list_" + action_id + "\"> ";
+			list_item_html += "<img class=\"empty\" src=\"/images/star_empty.png\" />  <img class=\"delete\" src=\"/images/delete.png\" /> ";
+			list_item_html += action_name + "</li>";
+
+			$("#actions").append(list_item_html);
+			$("#form_text").val("");
+
+			TwitTo.actions.push([action_id, action_name, false]);
+			
+			console.log("added action successfully");
+		}
+	}, "json");
+	return false;
+});
+
+/* Reset Form */
+$("#reset").bind("click", function(e){
+	$.post("/reset", {}, function(data){
+		TwitTo.buildActions();
+		$("#publish").show();
+		$("#customize").hide();
+	});
+	return false;
+});
+
+
+</script>

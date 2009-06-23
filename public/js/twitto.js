@@ -2,7 +2,7 @@ var TwitTo = {
   url: "",
   remain: 140,
   output: "",
-
+  actions: [],
   init: function() {
     this.url = $("#url").val()
     TwitTo.remain = TwitTo.countRemain(this.url, $("#action").val(), $("#message").val())
@@ -34,7 +34,8 @@ var TwitTo = {
     }
   },
 
-  buildActions: function(actions, fav_action) {
+  buildActions: function() {
+    var actions = this.actions;
     var actionHtml = [];
     for (var a in actions) {
         var action = actions[a][1];
@@ -45,6 +46,27 @@ var TwitTo = {
             actionHtml.push("<option value='" + action + "'>" + action + "</option>");
         }
     }
+    $("#action").html("");
     $(actionHtml.join('')).appendTo("#action");
+  },
+
+  removeAction: function(id) {
+    var remove_id = id
+    var isNotRemove = function(action) {
+       return (remove_id != action[0]);
+    }
+    this.actions = this.actions.filter(isNotRemove);
+  },
+
+  fave: function(fave_id) {
+    var actions = this.actions;
+    for (var a in actions) {
+        var aid = actions[a][0];
+        if (aid == fave_id) {
+          actions[a][2] = true;
+        } else {
+          actions[a][2] = false;
+        }
+    }
   }
 };

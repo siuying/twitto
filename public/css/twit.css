@@ -78,3 +78,6 @@ img:link {
 text-decoration: none;
 }
 
+.hidden {
+display: none;
+}

@@ -49,7 +49,9 @@ module Sinatra
 
           begin
             @user = find_or_create_user(session[:screen_name])
-            @action = Action.get(aid)
+            @action = Action.first(:id => aid, :user_id => @user.id)
+            raise "Not found" if @action.nil?
+            
             @user.fav(@action)
             @user.save
             "{'status': 'ok'}"
@@ -82,9 +84,9 @@ module Sinatra
           
           begin
             @user = find_or_create_user(session[:screen_name])
-            action = Action.first(:name => name) || Action.new(:name => name, :user => @user)
+            action = Action.first(:name => name, :user_id => @user.id) || Action.new(:name => name, :user_id => @user.id)
             action.save
-            "{'status': 'ok'}"
+            "{'status': 'ok', 'id': #{action.id}}"
           rescue StandardError => e
             "{'error' : '#{Rack::Utils.escape_html e.message}'}"
           end
@@ -92,14 +94,18 @@ module Sinatra
 
         app.post '/action.del' do
           authorize!
-          name      = params['name']
+          aid      = params['aid']
+          @log.info("delete action #{aid}")
 
           begin
             @user = find_or_create_user(session[:screen_name])
-            @action = Action.first(:name => name, :user => @user)
-            @action.delete
-
-            "{'status': 'ok'}"
+            @action = Action.get(aid.to_i)
+            if @action.user == @user     
+              @action.destroy
+              "{'status': 'ok'}"
+            else
+              raise "Access Denied"
+            end
           rescue StandardError => e
             "{'error' : '#{Rack::Utils.escape_html e.message}'}"
           end

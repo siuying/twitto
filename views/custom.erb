@@ -1,4 +1,4 @@
-<div>
+<div class="hidden" id="custom">
 	<p>Custom Actions</p>
 	<ul class="actions">
 		<% for action in @user.actions %>
@@ -13,9 +13,7 @@
 		</li>
 		<% end %>
 	</ul>
-</div>
 
-<div>
 	<form action="/custom" method="post" id="custom_form">
 	<p><img src="/images/add.png" />
 		Add Action
@@ -24,9 +22,11 @@
 	</p>
 	<p><a id="reset" href="#"><img src="/images/arrow_refresh.png" />Reset to Default</a></p>
 	</form>
+
+	<p><a href="#" id="done">done</a></p>
+
 </div>
 
-<div class="nav"><a href="#" id="back">back</a></div>
 
 <script type="text/javascript">
 
@@ -77,7 +77,7 @@ $("#reset").bind("click", function(e){
 	return false;
 });
 
-$("#back").bind("click", function(e){
+$("#done").bind("click", function(e){
 	history.go(-1);
 	return false;
 });
