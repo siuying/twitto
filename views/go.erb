@@ -45,13 +45,11 @@
 <script type="text/javascript">
 
 TwitTo.actions = <%= @actions %>;
-TwitTo.buildActions();
 
-$("#action").bind("change", 	TwitTo.onMessageUpdated);
-$(document).bind("keyup", 		TwitTo.onMessageUpdated);
-$("#message").bind("change", 	TwitTo.onMessageUpdated);
-
-TwitTo.init();
+findItemId = function(target) {
+  ele_id = $(target).parent().attr("id");
+  return ele_id.substring(ele_id.lastIndexOf('_')+1);
+}
 
 $("#customize-link").bind("click", function(e){
 	$("#publish").hide();
@@ -66,35 +64,26 @@ $("#done-custome-link").bind("click", function(e){
 	return false;
 });
 
-find_item_id = function(target) {
-  ele_id = $(target).parent().attr("id");
-  return ele_id.substring(ele_id.lastIndexOf('_')+1);
-}
-
-after_fave = function(fav_id) {
-	var old_fav_item = $(".star");
-	old_fav_item.parent().prepend("<img  class=\"empty\" src=\"/images/star_empty.png\" />");
-	old_fav_item.remove();
-
-	var fav_item = $("#action_list_" + fav_id).children(".empty");
-	fav_item.parent().prepend("<img class=\"star\" src=\"/images/star.png\" id=\"fav\" />");
-	fav_item.remove();
-	
-	TwitTo.fave(fav_id);
-}
-
 /* Set Fave */
 $(".empty").live("click", function(e){
-	var item_id = find_item_id(e.target);
-	$.post("/fave", { aid: item_id }, function(data){
-		after_fave(item_id);
+	var fav_id = findItemId(e.target);
+	$.post("/fave", { aid: fav_id }, function(data){
+		var old_fav_item = $(".star");
+		old_fav_item.parent().prepend("<img  class=\"empty\" src=\"/images/star_empty.png\" />");
+		old_fav_item.remove();
+
+		var fav_item = $("#action_list_" + fav_id).children(".empty");
+		fav_item.parent().prepend("<img class=\"star\" src=\"/images/star.png\" id=\"fav\" />");
+		fav_item.remove();
+
+		TwitTo.fave(fav_id);
 	});
 	return false;
 });
 
 /* Delete Item */
 $(".delete").live("click", function(e){
-	var action_id = find_item_id(e.target);
+	var action_id = findItemId(e.target);
 	$.post("/action.del", { aid: action_id }, function(data){
 		$("#action_list_" + action_id).remove();
 		TwitTo.removeAction(action_id);
@@ -106,19 +95,9 @@ $(".delete").live("click", function(e){
 $("#custom_form").bind("submit", function(e){
 	var action_name = $("#form_text").val();
 	$.post("/action.add", { name: action_name }, function(data){
-		var action_id = data['id'];
-		if (action_id) {
-			var list_item_html = "<li id=\"action_list_" + action_id + "\"> ";
-			list_item_html += "<img class=\"empty\" src=\"/images/star_empty.png\" />  <img class=\"delete\" src=\"/images/delete.png\" /> ";
-			list_item_html += action_name + "</li>";
-
-			$("#actions").append(list_item_html);
-			$("#form_text").val("");
-
-			TwitTo.actions.push([action_id, action_name, false]);
-			
-			console.log("added action successfully");
-		}
+		TwitTo.addAction(data['id'], action_name);
+		$("#actions").append(list_item_html);
+		$("#form_text").val("");
 	}, "json");
 	return false;
 });
@@ -134,4 +113,10 @@ $("#reset").bind("click", function(e){
 });
 
 
+TwitTo.buildActions();
+$("#action").bind("change",	TwitTo.onMessageUpdated);
+$(document).bind("keyup", TwitTo.onMessageUpdated);
+$("#message").bind("change", TwitTo.onMessageUpdated);
+
+TwitTo.init();
 </script>

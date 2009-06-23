@@ -49,7 +49,15 @@ var TwitTo = {
     $("#action").html("");
     $(actionHtml.join('')).appendTo("#action");
   },
-
+  
+  addAction: function(action_id, action_name) {
+    var list_item_html = "<li id=\"action_list_" + action_id + "\"> ";
+		list_item_html += "<img class=\"empty\" src=\"/images/star_empty.png\" /> ";
+		list_item_html += "<img class=\"delete\" src=\"/images/delete.png\" /> ";
+		list_item_html += action_name + "</li>";
+		TwitTo.actions.push([action_id, action_name, false]);
+  },
+  
   removeAction: function(id) {
     var remove_id = id
     var isNotRemove = function(action) {
