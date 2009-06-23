@@ -3,6 +3,11 @@ require 'rubygems'
 require 'json'
 require 'sinatra/base'
 
+
+gem 'data_objects', '>= 0.9.11'
+require 'data_objects'
+gem 'do_postgres', '>= 0.9.11'
+require 'do_postgres'
 DataMapper.setup(:default, ENV['DATABASE_URL'] || "sqlite3://#{FileUtils.pwd}/twitto.db")
 DataMapper.auto_migrate!
 require 'lib/sinatra/twitto'
