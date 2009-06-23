@@ -1,4 +1,4 @@
-class Sinatra::Twitto::Action
+class Action
   include DataMapper::Resource
   property  :id,     Serial
   property  :name,   String,  :length => 50
