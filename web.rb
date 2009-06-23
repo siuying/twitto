@@ -19,7 +19,7 @@ class TwitTo < Sinatra::Default
   register Sinatra::OauthAuth
   register Sinatra::TwitterClient
   register Sinatra::Twitto::Default
-#  register Sinatra::Twitto::Customize
+  register Sinatra::Twitto::Customize
 
   set :views,  'views'
   set :public, 'public'

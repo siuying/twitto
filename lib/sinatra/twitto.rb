@@ -10,9 +10,6 @@ module Sinatra
   end
 end
 
-gem 'datamapper'
-require 'datamapper'
-
 require 'twitto/action'
 require 'twitto/user'
 require 'twitto/default'
