@@ -2,8 +2,8 @@ path = File.expand_path(File.dirname(__FILE__))
 $:.unshift(path) unless $:.include?(path)
 
 require 'oauth_auth'
-require 'twitter'
-require 'bitly'
+require 'twitter_client'
+require 'bitly_client'
 
 module Sinatra
   module Twitto
